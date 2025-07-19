@@ -1,0 +1,249 @@
+{% extends 'sms/base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8 mt-10">
+    <h2 class="text-2xl font-bold text-center mb-6">Register Account</h2>
+    
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- User Type Selection -->
+        <div class="space-y-2">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Account Type</label>
+            <div class="flex space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="user_type" value="1" class="form-radio text-blue-600" checked>
+                    <span class="ml-2">Student</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="user_type" value="2" class="form-radio text-blue-600">
+                    <span class="ml-2">Teacher</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Common User Fields -->
+        <div class="space-y-4">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_username">
+                    Username
+                </label>
+                <input type="text" name="username" id="id_username" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {% if user_form.username.errors %}
+                    <p class="text-red-500 text-xs italic mt-1">{{ user_form.username.errors.as_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_email">
+                    Email
+                </label>
+                <input type="email" name="email" id="id_email" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {% if user_form.email.errors %}
+                    <p class="text-red-500 text-xs italic mt-1">{{ user_form.email.errors.as_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_first_name">
+                    First Name
+                </label>
+                <input type="text" name="first_name" id="id_first_name" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_last_name">
+                    Last Name
+                </label>
+                <input type="text" name="last_name" id="id_last_name" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_password1">
+                    Password
+                </label>
+                <input type="password" name="password1" id="id_password1" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {% if user_form.password1.errors %}
+                    <p class="text-red-500 text-xs italic mt-1">{{ user_form.password1.errors.as_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_password2">
+                    Password Confirmation
+                </label>
+                <input type="password" name="password2" id="id_password2" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {% if user_form.password2.errors %}
+                    <p class="text-red-500 text-xs italic mt-1">{{ user_form.password2.errors.as_text }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Student Form -->
+        <div id="student-form" class="space-y-4 border-t pt-4">
+            <h3 class="text-lg font-semibold">Student Information</h3>
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_enrollment_number">
+                    Enrollment Number
+                </label>
+              <input type="text" name="enrollment_number" id="id_enrollment_number"
+    class="shadow ..." >
+
+
+            {% if student_form.enrollment_number.errors %}
+                <p class="text-red-500 text-xs italic mt-1">{{ student_form.enrollment_number.errors.as_text }}</p>
+            {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_department">
+                    Department
+                </label>
+                <select name="department" id="id_department" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    {% if request.POST.user_type == '1' or not request.POST.user_type %}required{% endif %}>
+                <option value="">Select Department</option>
+                {% for dept in departments %}
+                    <option value="{{ dept.id }}" {% if student_form.department.value == dept.id %}selected{% endif %}>
+                        {{ dept.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_course">
+                    Course
+                </label>
+                <select name="course" id="id_course"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Select Course</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_admission_date">
+                    Admission Date
+                </label>
+                <input type="date" name="admission_date" id="id_admission_date"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+        </div>
+        
+        <!-- Teacher Form (hidden by default) -->
+        <div id="teacher-form" class="space-y-4 border-t pt-4 hidden">
+            <h3 class="text-lg font-semibold">Teacher Information</h3>
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_department">
+                    Department
+                </label>
+                <select name="department" id="id_teacher_department"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Select Department</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept.id }}">{{ dept.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_qualification">
+                    Qualification
+                </label>
+                <input type="text" name="qualification" id="id_qualification" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_specialization">
+                    Specialization
+                </label>
+                <input type="text" name="specialization" id="id_specialization"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="id_joining_date">
+                    Joining Date
+                </label>
+                <input type="date" name="joining_date" id="id_joining_date"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+        </div>
+        
+        <div class="flex justify-end pt-4">
+            <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Register
+            </button>
+        </div>
+    </form>
+    
+    <div class="mt-4 text-center">
+        <p class="text-gray-600 text-sm">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="text-blue-500 hover:text-blue-800">Login here</a>
+        </p>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const userTypeRadios = document.querySelectorAll('input[name="user_type"]');
+    const studentForm = document.getElementById('student-form');
+    const teacherForm = document.getElementById('teacher-form');
+    
+    // Course loading for student form
+    const deptSelect = document.getElementById('id_department');
+    const courseSelect = document.getElementById('id_course');
+    
+    function toggleForms() {
+        const selectedValue = document.querySelector('input[name="user_type"]:checked').value;
+        
+        if (selectedValue === '1') {
+            studentForm.classList.remove('hidden');
+            teacherForm.classList.add('hidden');
+        } else if (selectedValue === '2') {
+            studentForm.classList.add('hidden');
+            teacherForm.classList.remove('hidden');
+        }
+    }
+    
+    function loadCourses(departmentId) {
+        if (departmentId) {
+            fetch(`/api/get-courses/?department_id=${departmentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    courseSelect.innerHTML = '<option value="">Select Course</option>';
+                    data.courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course.id;
+                        option.textContent = course.name;
+                        courseSelect.appendChild(option);
+                    });
+                });
+        } else {
+            courseSelect.innerHTML = '<option value="">Select Course</option>';
+        }
+    }
+    
+    userTypeRadios.forEach(radio => {
+        radio.addEventListener('change', toggleForms);
+    });
+    
+    if (deptSelect) {
+        deptSelect.addEventListener('change', function() {
+            loadCourses(this.value);
+        });
+    }
+    
+    // Initialize form visibility
+    toggleForms();
+});
+</script>
+{% endblock %}

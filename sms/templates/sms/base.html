@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Student Portal{% endblock %}</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Optional: extend Tailwind w/ your brand colors -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-blue': '#3B71CA',
+            'brand-green': '#14A44D',
+          },
+        },
+      },
+    };
+  </script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+  <!-- Navigation -->
+  <nav class="bg-white shadow">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex justify-between h-16 items-center">
+        <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}" class="flex items-center">
+          <span class="font-semibold text-gray-700 text-lg">Student Portal</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-6">
+          <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}" class="text-gray-600 hover:text-brand-blue font-medium transition">Home</a>
+         {% if user.is_authenticated and user.user_type != 1 %}  <!-- 1 = student -->
+        <a href="{% url 'student_list' %}" class="text-gray-600 hover:text-brand-blue font-medium transition">Students</a>
+    {% endif %}
+          {% if user.is_authenticated %}
+            <!-- User Profile Dropdown -->
+            <div class="relative group">
+              <button class="flex items-center space-x-2 focus:outline-none">
+                <div class="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center text-white font-medium">
+                  {{ user.username|first|upper }}
+                </div>
+                <span class="text-gray-600 font-medium">{{ user.username }}</span>
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+              <!-- Dropdown Menu -->
+              <div class="absolute right-0 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                <div class="border-t border-gray-200"></div>
+                <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+              </div>
+            </div>
+          {% else %}
+            <a href="{% url 'login' %}" class="text-gray-600 hover:text-brand-blue font-medium transition">Login</a>
+            <a href="{% url 'register' %}" class="text-gray-600 hover:text-brand-blue font-medium transition">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    {% if messages %}
+      <div class="space-y-3 mb-6">
+        {% for message in messages %}
+          {# Use helper include to map message.tags -> Tailwind alert styles #}
+          {% include "sms/includes/message_alert.html" with message=message %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-white shadow mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-6">
+      <p class="text-center text-gray-500 text-sm">
+        &copy; {% now "Y" %} Student Management Portal. All rights reserved.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

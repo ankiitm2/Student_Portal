@@ -1,0 +1,121 @@
+{% extends 'sms/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Student Registration</h2>
+
+  <form method="post" class="space-y-8">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- User Fields -->
+      <div class="space-y-4">
+        <div>
+          <label for="id_username" class="block text-sm font-medium text-gray-700">
+            Username
+          </label>
+          {% render_field form.username class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+          {% if form.username.errors %}
+            <p class="mt-1 text-xs text-red-500">{{ form.username.errors.as_text }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="id_email" class="block text-sm font-medium text-gray-700">Email</label>
+          {% render_field form.email type="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+          {% if form.email.errors %}
+            <p class="mt-1 text-xs text-red-500">{{ form.email.errors.as_text }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="id_first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+          {% render_field form.first_name class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+        </div>
+
+        <div>
+          <label for="id_last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+          {% render_field form.last_name class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+        </div>
+      </div>
+
+      <!-- Student Fields -->
+      <div class="space-y-4">
+        <div>
+          <label for="id_department" class="block text-sm font-medium text-gray-700">Department</label>
+          {% render_field form.department class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+        </div>
+
+        <div>
+          <label for="id_course" class="block text-sm font-medium text-gray-700">Course</label>
+          {% render_field form.course class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+        </div>
+
+        <div>
+          <label for="id_enrollment_number" class="block text-sm font-medium text-gray-700">Enrollment Number</label>
+          {% render_field form.enrollment_number class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+        </div>
+
+        <div>
+          <label for="id_admission_date" class="block text-sm font-medium text-gray-700">Admission Date</label>
+          {% render_field form.admission_date type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+        </div>
+
+        <div>
+          <label for="id_password1" class="block text-sm font-medium text-gray-700">Password</label>
+          {% render_field form.password1 type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+          {% if form.password1.errors %}
+            <p class="mt-1 text-xs text-red-500">{{ form.password1.errors.as_text }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="id_password2" class="block text-sm font-medium text-gray-700">Password Confirmation</label>
+          {% render_field form.password2 type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-blue focus:ring-brand-blue" %}
+          {% if form.password2.errors %}
+            <p class="mt-1 text-xs text-red-500">{{ form.password2.errors.as_text }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end pt-4">
+      <button
+        type="submit"
+        class="px-5 py-2.5 bg-brand-blue text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue">
+        Register Student
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Dynamic course loading based on department selection
+  document.addEventListener('DOMContentLoaded', function () {
+    const deptEl = document.getElementById('id_department');
+    const courseEl = document.getElementById('id_course');
+
+    if (!deptEl || !courseEl) return;
+
+    deptEl.addEventListener('change', function () {
+      const departmentId = this.value;
+      if (departmentId) {
+        fetch(`/api/get-courses/?department_id=${departmentId}`)
+          .then((r) => r.json())
+          .then((data) => {
+            courseEl.innerHTML = '';
+            data.courses.forEach((course) => {
+              const opt = document.createElement('option');
+              opt.value = course.id;
+              opt.textContent = course.name;
+              courseEl.appendChild(opt);
+            });
+          });
+      } else {
+        courseEl.innerHTML = '<option value="">---------</option>';
+      }
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'sms/base.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard</h1>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  <!-- Courses -->
+  <div class="rounded-lg shadow bg-brand-blue text-white p-6">
+    <h5 class="text-lg font-semibold">Courses</h5>
+    <p class="mt-2 text-3xl font-bold">{{ total_courses }}</p>
+  </div>
+
+  <!-- Students -->
+  <div class="rounded-lg shadow bg-brand-green text-white p-6">
+    <h5 class="text-lg font-semibold">Students</h5>
+    <p class="mt-2 text-3xl font-bold">{{ total_students }}</p>
+  </div>
+
+  <!-- Teachers (example) -->
+  <div class="rounded-lg shadow bg-indigo-500 text-white p-6">
+    <h5 class="text-lg font-semibold">Teachers</h5>
+    <p class="mt-2 text-3xl font-bold">{{ total_teachers }}</p>
+  </div>
+
+  <!-- Subjects (example) -->
+  <div class="rounded-lg shadow bg-amber-500 text-white p-6">
+    <h5 class="text-lg font-semibold">Subjects</h5>
+    <p class="mt-2 text-3xl font-bold">{{ total_subjects }}</p>
+  </div>
+</div>
+{% endblock %}

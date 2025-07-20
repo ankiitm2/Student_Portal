@@ -54,6 +54,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'student_management_portal.urls'
 
+ALLOWED_HOSTS = ['ankittm20.pythonanywhere.com']
+
 
 LOGIN_URL = 'auth_login'  
 LOGIN_REDIRECT_URL = 'dashboard'
